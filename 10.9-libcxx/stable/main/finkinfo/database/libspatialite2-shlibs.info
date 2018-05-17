@@ -1,8 +1,8 @@
 Info3: <<
 Package: libspatialite2-shlibs
 Version: 3.0.1
-Revision: 6
-Description: OBSOLETE use 'libspatialite7-shlibs' instead
+Revision: 7
+Description: Shared libraries for libspatialite2 package
 License: OSI-Approved
 Homepage: http://www.gaia-gis.it/spatialite/
 Maintainer: BABA Yoshihiko <babayoshihiko@mac.com>
@@ -25,7 +25,7 @@ Depends: <<
   libfreexl1-shlibs
 <<
 BuildDepends: <<
-  fink (>= 0.32), 
+  fink (>= 0.28), 
   fink-package-precedence,
   libiconv-dev,
   sqlite3-dev,
@@ -74,7 +74,7 @@ DocFiles: AUTHORS COPYING INSTALL README
 
 SplitOff: <<
   Package: libspatialite2
-  Description: OBSOLETE use 'libspatialite7' instead
+  Description: GIS extensions and tools to SQLite
   Conflicts: <<
     libspatialite5,
     libspatialite7
@@ -86,7 +86,6 @@ SplitOff: <<
   Depends: <<
     %N (=%v-%r)
   <<
-  RuntimeDepends: fink-obsolete-packages
   BuildDependsOnly: true
   Files: <<
     include
