@@ -1,7 +1,7 @@
 Info3: <<
 Package: libspatialite2-shlibs
 Version: 3.0.1
-Revision: 7
+Revision: 8
 Description: Shared libraries for libspatialite2 package
 License: OSI-Approved
 Homepage: http://www.gaia-gis.it/spatialite/
@@ -43,6 +43,7 @@ SetCPPFLAGS: -Os
 SetLDFLAGS: -lcharset -L%p/opt/libgeos3.5.0/lib
 ConfigureParams: <<
 	--target=macosx \
+	--disable-static \
 	--enable-dependency-tracking
 <<
 
@@ -89,7 +90,7 @@ SplitOff: <<
   BuildDependsOnly: true
   Files: <<
     include
-    lib/libspatialite.{a,dylib,la}
+    lib/libspatialite.{dylib,la}
     lib/pkgconfig
   <<
   DocFiles: AUTHORS COPYING INSTALL README
