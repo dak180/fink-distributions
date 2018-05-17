@@ -47,16 +47,20 @@ ConfigureParams: <<
 	--enable-dependency-tracking
 <<
 
-CompileScript: <<
-#!/bin/sh -xe
+PatchScript: <<
   # Patch configure not to link like Puma on Yosemite
   perl -pi -e 's/(10\.\[012\])\*/\1\,.\*/' configure
 
+  perl -pi -e "s|SUBDIRS = src test|SUBDIRS = src test #|g" Makefile.in
+
+  perl -pi -e 's/(-version-info.*)/\1 -no-undefined/ unless /-no-undefined/' src/Makefile.in
+<<
+
+CompileScript: <<
+#!/bin/sh -xe
+
   # Set up Libraries
   ./configure %c
-  
-  # 4.1.0
-  perl -pi -e "s|SUBDIRS = src test|SUBDIRS = src test #|g" Makefile
   
   make
   fink-package-precedence --prohibit-bdep=libspatialite7 .
