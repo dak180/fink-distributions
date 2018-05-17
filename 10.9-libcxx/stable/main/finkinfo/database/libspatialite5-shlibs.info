@@ -1,8 +1,8 @@
 Info3: <<
-Package: libspatialite2
-Version: 3.0.1
-Revision: 6
-Description: OBSOLETE use 'libspatialite7' instead
+Package: libspatialite5-shlibs
+Version: 4.1.1
+Revision: 5
+Description: Shared libraries for libspatialite5 package
 License: OSI-Approved
 Homepage: http://www.gaia-gis.it/spatialite/
 Maintainer: BABA Yoshihiko <babayoshihiko@mac.com>
@@ -16,39 +16,33 @@ BuildConflicts: <<
 	libspatialite5,
 	libspatialite7
 <<
-Conflicts: <<
-	libspatialite5,
-	libspatialite7
-<<
-Replaces: <<
-	libspatialite5,
-	libspatialite7
-<<
 
 Depends: <<
-  %n-shlibs (=%v-%r)
+  libiconv,
+  sqlite3-shlibs,
+  libproj9-shlibs,
+  libgeos3.5.0-shlibs,
+  libfreexl1-shlibs
 <<
-RuntimeDepends: fink-obsolete-packages
 BuildDepends: <<
-  fink (>= 0.32), 
+  fink (>= 0.28), 
   fink-package-precedence,
   libiconv-dev,
   sqlite3-dev,
   libproj9, libgeos3.5.0,
   libfreexl1-dev
 <<
-BuildDependsOnly: True
 
 # Unpack Phase.
 
 Source: http://www.gaia-gis.it/gaia-sins/libspatialite-sources/libspatialite-%v.tar.gz
-Source-MD5: 450d1a0d9da1bd9f770b7db3f2509f69
+Source-MD5: 356e0b18de0d382e27da578dc227a7b0
 
-SetCFLAGS: -I%p/opt/libgeos3.5.0/include 
 SetCPPFLAGS: -Os
-SetLDFLAGS: -lcharset -L%p/opt/libgeos3.5.0/lib
+SetLDFLAGS: -lcharset
 ConfigureParams: <<
 	--target=macosx \
+	--with-geosconfig=%p/opt/libgeos3.5.0/bin/geos-config \
 	--enable-dependency-tracking
 <<
 
@@ -59,12 +53,12 @@ CompileScript: <<
 
   # Set up Libraries
   ./configure %c
-
-  perl -pi -e "s|SUBDIRS = src test examples|SUBDIRS = src test|" Makefile
   
-  # 4.0.0
+  # 4.1.0
+  perl -pi -e "s|SUBDIRS = src test|SUBDIRS = src test #|g" Makefile
+  
   make
-  fink-package-precedence --prohibit-bdep=%N .
+  fink-package-precedence --prohibit-bdep=libspatialite5 .
 <<
 
 # Install Phase.
@@ -73,23 +67,30 @@ InstallScript: <<
   # Install Libraries
   make install prefix=%i
 <<
+Shlibs: <<
+  %p/lib/libspatialite.5.dylib  7.0.0 %n (>= 4.1.0-1)
+<<
 DocFiles: AUTHORS COPYING INSTALL README
 
 SplitOff: <<
-  Package: %N-shlibs
-  Description: OBSOLETE use 'libspatialite7-shlibs' instead
-  Depends: <<
-    libiconv,
-    sqlite3-shlibs,
-    libproj9-shlibs,
-    libgeos3.5.0-shlibs,
-    libfreexl1-shlibs
-  <<  
-  Files: <<
-    lib/libspatialite.2.dylib
+  Package: libspatialite5
+  Description: GIS extensions and tools to SQLite
+  Conflicts: <<
+    libspatialite2,
+    libspatialite7
   <<
-  Shlibs: <<
-    %p/lib/libspatialite.2.dylib  5.0.0 %n (>= 3.0.1-1)
+  Replaces: <<
+    libspatialite2,
+    libspatialite7
+  <<
+  Depends: <<
+    %N (=%v-%r)
+  <<
+  BuildDependsOnly: true
+  Files: <<
+    include
+    lib/libspatialite.{a,dylib,la}
+    lib/pkgconfig
   <<
   DocFiles: AUTHORS COPYING INSTALL README
 # End of SplitOff

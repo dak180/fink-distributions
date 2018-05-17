@@ -1,8 +1,8 @@
 Info3: <<
-Package: libspatialite7
+Package: libspatialite7-shlibs
 Version: 4.3.0
 Revision: 2
-Description: GIS extensions and tools to SQLite
+Description: Shared libraries for libspatialite7 package
 License: OSI-Approved
 Homepage: http://www.gaia-gis.it/spatialite/
 Maintainer: BABA Yoshihiko <babayoshihiko@mac.com>
@@ -16,17 +16,13 @@ BuildConflicts: <<
 	libspatialite5,
 	libspatialite7
 <<
-Conflicts: <<
-	libspatialite2,
-	libspatialite5
-<<
-Replaces: <<
-	libspatialite2,
-	libspatialite5
-<<
 
 Depends: <<
-  %n-shlibs (=%v-%r)
+  libiconv,
+  sqlite3-shlibs,
+  libproj9-shlibs,
+  libgeos3.5.0-shlibs,
+  libfreexl1-shlibs (>=1.0.2-1)
 <<
 BuildDepends: <<
   fink (>= 0.28), 
@@ -36,7 +32,6 @@ BuildDepends: <<
   libproj9, libgeos3.5.0,
   libfreexl1-dev (>=1.0.2-1)
 <<
-BuildDependsOnly: True
 
 # Unpack Phase.
 
@@ -63,7 +58,7 @@ CompileScript: <<
   perl -pi -e "s|SUBDIRS = src test|SUBDIRS = src test #|g" Makefile
   
   make
-  fink-package-precedence --prohibit-bdep=%N .
+  fink-package-precedence --prohibit-bdep=libspatialite7 .
 <<
 
 # Install Phase.
@@ -72,23 +67,31 @@ InstallScript: <<
   # Install Libraries
   make install prefix=%i
 <<
+Shlibs: <<
+  %p/lib/libspatialite.7.dylib  9.0.0 %n (>= 4.3.0-1)
+<<
 DocFiles: AUTHORS COPYING INSTALL README
 
 SplitOff: <<
-  Package: %N-shlibs
-  Description: Shared libraries for %N package
-  Depends: <<
-    libiconv,
-    sqlite3-shlibs,
-    libproj9-shlibs,
-    libgeos3.5.0-shlibs,
-    libfreexl1-shlibs (>=1.0.2-1)
-  <<  
-  Files: <<
-    lib/libspatialite.7.dylib
+  Package: libspatialite7
+  Description: GIS extensions and tools to SQLite
+  Conflicts: <<
+    libspatialite2,
+    libspatialite5
   <<
-  Shlibs: <<
-    %p/lib/libspatialite.7.dylib  9.0.0 %n (>= 4.3.0-1)
+  Replaces: <<
+    libspatialite2,
+    libspatialite5
+  <<
+  Depends: <<
+    %N (=%v-%r)
+  <<
+  BuildDependsOnly: true
+  Files: <<
+    include
+    lib/libspatialite.{a,dylib,la}
+    lib/mod_*
+    lib/pkgconfig
   <<
   DocFiles: AUTHORS COPYING INSTALL README
 # End of SplitOff
