@@ -7,14 +7,9 @@ License: OSI-Approved
 Homepage: http://www.gaia-gis.it/spatialite/
 Maintainer: BABA Yoshihiko <babayoshihiko@mac.com>
 DescDetail: <<
-  The SpatiaLite extension enables SQLite to support 
+The SpatiaLite extension enables SQLite to support 
 spatial data too [aka GEOMETRY], in a way conformant 
 to OpenGIS specifications.
-<<
-BuildConflicts: <<
-	libspatialite2,
-	libspatialite5,
-	libspatialite7
 <<
 
 Depends: <<
@@ -25,8 +20,9 @@ Depends: <<
   libfreexl1-shlibs (>=1.0.2-1)
 <<
 BuildDepends: <<
-  fink (>= 0.28), 
+  fink (>= 0.28),
   fink-package-precedence,
+  flag-sort,
   libiconv-dev,
   sqlite3-dev,
   libproj9, libgeos3.6.1,
@@ -39,9 +35,10 @@ Source: http://www.gaia-gis.it/gaia-sins/libspatialite-sources/libspatialite-%v.
 Source-MD5: 356e0b18de0d382e27da578dc227a7b0
 
 SetCPPFLAGS: -Os
-SetLDFLAGS: -lcharset
+# Need to keep local -I first (avoids needing fragile BuildConflicts)
 ConfigureParams: <<
 	--target=macosx \
+	CC="flag-sort gcc" \
 	--disable-static \
 	--with-geosconfig=%p/opt/libgeos3.6.1/bin/geos-config \
 	--enable-dependency-tracking
