@@ -1,7 +1,7 @@
 Info3: <<
 Package: libspatialite2-shlibs
 Version: 3.0.1
-Revision: 9
+Revision: 10
 Description: Shared libraries for libspatialite2 package
 License: OSI-Approved
 Homepage: http://www.gaia-gis.it/spatialite/
@@ -28,6 +28,8 @@ BuildDepends: <<
   libproj9, libgeos3.6.1,
   libfreexl1-dev (>=1.0.2-1)
 <<
+Conflicts: libspatialite2 (<< 3.0.1-10)
+Replaces: libspatialite2 (<< 3.0.1-10)
 
 # Unpack Phase.
 
@@ -68,35 +70,15 @@ InstallScript: <<
 #!/bin/sh -xe
   # Install Libraries
   make install prefix=%i
+
+  rm -rf %i/include
+  rm %i/lib/libspatialite.{dylib,la}
+  rm -rf %i/lib/pkgconfig
 <<
 Shlibs: <<
   %p/lib/libspatialite.2.dylib  5.0.0 %n (>= 3.0.1-1)
 <<
 DocFiles: AUTHORS COPYING INSTALL README
-
-SplitOff: <<
-  Package: libspatialite2
-  Description: GIS extensions and tools to SQLite
-  Conflicts: <<
-    libspatialite5,
-    libspatialite7
-  <<
-  Replaces: <<
-    libspatialite5,
-    libspatialite7
-  <<
-  Depends: <<
-    %N (=%v-%r)
-  <<
-  BuildDependsOnly: true
-  Files: <<
-    include
-    lib/libspatialite.{dylib,la}
-    lib/pkgconfig
-  <<
-  DocFiles: AUTHORS COPYING INSTALL README
-# End of SplitOff
-<<
 
 # End of Info3
 <<
