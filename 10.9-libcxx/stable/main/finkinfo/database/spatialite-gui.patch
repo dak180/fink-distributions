@@ -1,0 +1,61 @@
+diff -Nurd spatialite_gui-1.7.1.orig/Main.cpp spatialite_gui-1.7.1/Main.cpp
+--- spatialite_gui-1.7.1.orig/Main.cpp	2013-06-29 04:29:11.000000000 -0400
++++ spatialite_gui-1.7.1/Main.cpp	2018-05-20 07:25:33.000000000 -0400
+@@ -104,6 +104,7 @@
+ //
+ // main GUI frame constructor
+ //
++  setlocale(LC_ALL, "");
+   MemoryDatabase = false;
+   AutoSaveInterval = 0;
+   LastTotalChanges = 0;
+diff -Nurd spatialite_gui-1.7.1.orig/Makefile.in spatialite_gui-1.7.1/Makefile.in
+--- spatialite_gui-1.7.1.orig/Makefile.in	2013-06-29 04:29:11.000000000 -0400
++++ spatialite_gui-1.7.1/Makefile.in	2018-05-20 07:23:27.000000000 -0400
+@@ -305,7 +305,7 @@
+ top_builddir = @top_builddir@
+ top_srcdir = @top_srcdir@
+ ACLOCAL_AMFLAGS = -I m4
+-INCLUDES = @CFLAGS@ -I$(top_srcdir)
++INCLUDES = -I$(top_srcdir) @CFLAGS@
+ spatialite_gui_SOURCES = Classdef.h BlobExplorer.cpp \
+ 	Dialogs.cpp DialogsGraph.cpp Exif.cpp \
+ 	Main.cpp MalformedGeoms.cpp Network.cpp \
+diff -Nurd spatialite_gui-1.7.1.orig/configure spatialite_gui-1.7.1/configure
+--- spatialite_gui-1.7.1.orig/configure	2013-06-29 04:29:11.000000000 -0400
++++ spatialite_gui-1.7.1/configure	2018-05-20 07:31:31.000000000 -0400
+@@ -15543,7 +15543,7 @@
+ fi
+ CXXFLAGS="$(wx-config --cxxflags)"
+ AM_CXXFLAGS="$(wx-config --cxxflags)"
+-WX_LIBS="$(wx-config --libs)"
++WX_LIBS="$(wx-config --libs std,aui)"
+ 
+ 
+ # Checks for header files.
+@@ -16271,6 +16271,7 @@
+ fi
+ done
+ 
++LIBS="-lsqlite3 $LIBS"
+ 
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking for pj_init_plus in -lproj" >&5
+ $as_echo_n "checking for pj_init_plus in -lproj... " >&6; }
+@@ -16412,7 +16413,7 @@
+ 
+ done
+ 
+-CPPFLAGS="$CPPFLAGS_SAVE"
++CPPFLAGS="$CPPFLAGS_SAVE $GEOS_CPPFLAGS"
+ # Ensure we can link against libgeos_c
+ LIBS_SAVE="$LIBS"
+ LIBS="$GEOS_LDFLAGS"
+@@ -16475,7 +16476,7 @@
+ fi
+ 
+ LIBS="$LIBS_SAVE"
+-LIBS=$LIBS$GEOS_LDFLAGS' -lgeos_c'
++LIBS="$LIBS $GEOS_LDFLAGS -lgeos_c"
+ 
+ 
+ 
