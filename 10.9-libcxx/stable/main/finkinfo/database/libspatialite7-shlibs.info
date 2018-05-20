@@ -13,22 +13,24 @@ to OpenGIS specifications.
 <<
 
 Depends: <<
-  libxml2-shlibs (>= 2.9.1-1),
-  libiconv,
-  sqlite3-shlibs,
-  libproj9-shlibs,
+  libfreexl1-shlibs (>=1.0.2-1),
   libgeos3.6.1-shlibs,
-  libfreexl1-shlibs (>=1.0.2-1)
+  libiconv,
+  libproj9-shlibs,
+  libxml2-shlibs (>= 2.9.1-1),
+  sqlite3-shlibs,
 <<
 BuildDepends: <<
   fink (>= 0.28),
   fink-package-precedence,
   flag-sort,
-  libxml2 (>= 2.9.1-1),
+  libfreexl1-dev (>=1.0.2-1),
+  libgeos3.6.1,
   libiconv-dev,
-  sqlite3-dev,
-  libproj9, libgeos3.6.1,
-  libfreexl1-dev (>=1.0.2-1)
+  libproj9,
+  libxml2 (>= 2.9.1-1),
+  pkgconfig,
+  sqlite3-dev
 <<
 
 # Unpack Phase.
