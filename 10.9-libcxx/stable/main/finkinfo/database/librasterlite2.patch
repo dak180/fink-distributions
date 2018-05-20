@@ -1,0 +1,26 @@
+diff -Nurd librasterlite-1.1g.orig/lib/Makefile.in librasterlite-1.1g/lib/Makefile.in
+--- librasterlite-1.1g.orig/lib/Makefile.in	2013-05-05 06:50:13.000000000 -0400
++++ librasterlite-1.1g/lib/Makefile.in	2018-05-19 23:47:27.000000000 -0400
+@@ -269,7 +269,7 @@
+ 
+ librasterlite_la_LDFLAGS = -version-info 2:0:0 -no-undefined
+ librasterlite_la_LIBADD = @LIBSPATIALITE_LIBS@ @LIBPNG_LIBS@ \
+-	-lgeotiff -ltiff -ljpeg -lspatialite -lproj
++	-lgeotiff -ltiff -ljpeg -lspatialite -lproj -lsqlite3
+ 
+ MOSTLYCLEANFILES = *.gcna *.gcno *.gcda
+ all: all-am
+diff -Nurd librasterlite-1.1g.orig/src/Makefile.in librasterlite-1.1g/src/Makefile.in
+--- librasterlite-1.1g.orig/src/Makefile.in	2013-05-05 06:50:13.000000000 -0400
++++ librasterlite-1.1g/src/Makefile.in	2018-05-19 23:54:42.000000000 -0400
+@@ -249,9 +249,7 @@
+ rasterlite_topmost_SOURCES = rasterlite_topmost.c
+ rasterlite_grid_SOURCES = rasterlite_grid.c
+ rasterlite_tool_SOURCES = rasterlite_tool.c
+-LDADD = ../lib/.libs/librasterlite.a \
+-	@LIBSPATIALITE_LIBS@ @LIBPNG_LIBS@ \
+-        -lgeotiff -ltiff -ljpeg -lspatialite -lproj
++LDADD = ../lib/.libs/librasterlite.a
+ 
+ MOSTLYCLEANFILES = *.gcna *.gcno *.gcda
+ all: all-am
