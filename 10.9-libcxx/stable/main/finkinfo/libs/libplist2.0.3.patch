@@ -1,0 +1,70 @@
+commit d5706b1f37ff01eb5eff60ec378e2a6a8f3c87b2
+Author: Daniel Macks <dmacks@netspace.org>
+Date:   Mon Dec 28 08:19:38 2020 -0500
+
+    fix CFLAGS vs CPPFLAGS mixups in Makefile.am
+    
+    https://github.com/libimobiledevice/libplist/issues/185
+    
+    Not touching cython because I don't use it, but by eye it needs
+    similar patching
+
+diff --git a/libcnary/Makefile.am b/libcnary/Makefile.am
+index f5c7bc9..55d089f 100644
+--- a/libcnary/Makefile.am
++++ b/libcnary/Makefile.am
+@@ -1,6 +1,6 @@
+-AM_CFLAGS = \
+-	$(GLOBAL_CFLAGS) \
+-	-I$(top_srcdir)/libcnary/include
++AM_CPPFLAGS = \
++	-I$(top_srcdir)/libcnary/include \
++	$(GLOBAL_CFLAGS)
+ 
+ AM_LDFLAGS =
+ 
+diff --git a/src/Makefile.am b/src/Makefile.am
+index 6583add..fc58d73 100644
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -1,9 +1,9 @@
+ AM_CPPFLAGS = \
+ 	-I$(top_srcdir)/include \
+ 	-I$(top_srcdir) \
+-	-I$(top_srcdir)/libcnary/include
++	-I$(top_srcdir)/libcnary/include \
++	$(GLOBAL_CFLAGS)
+ 
+-AM_CFLAGS = $(GLOBAL_CFLAGS)
+ AM_LDFLAGS = $(GLOBAL_LDFLAGS)
+ 
+ lib_LTLIBRARIES = \
+diff --git a/test/Makefile.am b/test/Makefile.am
+index 6b3b901..387bbe8 100644
+--- a/test/Makefile.am
++++ b/test/Makefile.am
+@@ -1,7 +1,7 @@
+-AM_CFLAGS = \
+-	$(GLOBAL_CFLAGS) \
++AM_CPPFLAGS = \
+ 	-I$(top_srcdir)/include \
+-	-I$(top_srcdir)/libcnary/include
++	-I$(top_srcdir)/libcnary/include \
++	$(GLOBAL_CFLAGS)
+ 
+ AM_LDFLAGS =
+ 
+diff --git a/tools/Makefile.am b/tools/Makefile.am
+index 9f3214d..6e8e155 100644
+--- a/tools/Makefile.am
++++ b/tools/Makefile.am
+@@ -1,6 +1,6 @@
+-AM_CFLAGS = \
+-	$(GLOBAL_CFLAGS) \
+-	-I$(top_srcdir)/include
++AM_CPPFLAGS = \
++	-I$(top_srcdir)/include \
++	$(GLOBAL_CFLAGS)
+ 
+ AM_LDFLAGS =
+ 

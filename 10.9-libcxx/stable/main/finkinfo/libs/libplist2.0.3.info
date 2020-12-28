@@ -1,0 +1,82 @@
+Package: libplist2.0.3
+Version: 2.2.0
+Revision: 1
+Description: Library for handling apple .plist files
+License: GPL/LGPL
+
+# Dependencies:
+BuildDependsOnly: true
+BuildDepends: <<
+  autoconf2.6,
+  automake1.15,
+  fink-package-precedence,
+  libtool2
+<<
+Depends:   %N-shlibs (= %v-%r)
+Conflicts: libplist, libplist1
+Replaces:  libplist, libplist1
+GCC: 4.0
+
+# Unpack Phase:
+Source: https://github.com/libimobiledevice/libplist/releases/download/%v/libplist-%v.tar.bz2
+Source-MD5: 63cc49401521662c94cd4107898c744c
+
+# Patch Phase
+#   Fix upstream flag-passing bugs. See:
+#   https://github.com/libimobiledevice/libplist/issues/185
+PatchFile: %n.patch
+PatchFile-MD5: 9a2fcb92acdf5a659f1bcae5eacbe029
+
+# Compile Phase:
+ConfigureParams: <<
+	--disable-silent-rules \
+	--without-cython \
+	--disable-static
+<<
+CompileScript: <<
+  autoreconf -fi
+  %{default_script}
+  fink-package-precedence --prohibit-bdep=libplist2.0.3 .
+<<
+InfoTest: TestScript: make check || exit 2
+
+# Install Phase:
+InstallScript: <<
+  make install DESTDIR=%d
+<<
+DocFiles: AUTHORS COPYING* README.md
+
+SplitOff: <<
+  Package: %N-shlibs
+  Files: <<
+    lib/libplist-2.0.3.dylib
+    lib/libplist++-2.0.3.dylib
+  <<
+  Shlibs: <<
+    %p/lib/libplist-2.0.3.dylib   7.0.0 %n (>= 2.2.0-1)
+    %p/lib/libplist++-2.0.3.dylib 7.0.0 %n (>= 2.2.0-1)
+  <<
+  DocFiles: AUTHORS COPYING* README.md
+<<
+
+Splitoff2: <<
+  Package: libplist-bin
+  Depends: %N-shlibs (>= %v-1)
+  Files: <<
+    bin
+    share/man
+  <<
+  DocFiles: AUTHORS COPYING* README.md
+<<
+
+# Additional Info
+DescDetail: <<
+libplist eases dealing with Apple's property list files.
+<<
+
+DescPort: <<
+Python bindings are pushed to a separate package.
+<<
+
+Homepage: http://www.libimobiledevice.org/
+Maintainer: Karl-Michael Schindler <karl-michael.schindler@web.de>
