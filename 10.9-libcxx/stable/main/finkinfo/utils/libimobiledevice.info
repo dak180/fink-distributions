@@ -1,57 +1,70 @@
 Package: libimobiledevice
-# OPENSSL110 FTBFS, newer version has upstream git patches to support it
-Version: 1.1.4
-Revision: 11
+Version: 1.3.0
+Revision: 1
 Description: Library to talk to iDevices
 License: Restrictive
 
 # Dependencies:
 BuildDependsOnly: true
-Depends: %N4-shlibs (>= %v-1)
-BuildDepends: pkgconfig, usbmuxd2-dev, libplist1, libgcrypt, openssl100-dev, libxml2 (>= 2.6.32-1)
-
-# Unpack Phase:
-Source: http://www.libimobiledevice.org/downloads/%n-%v.tar.bz2
-Source-MD5: 3f28cbc6a2e30d34685049c0abde5183
-
-# Upstream patches for openssl110. See:
-#   02a0e03e24bc96bba2e5ea2438c30baf803fd137
-#   f635812ccc9b2eb63f5bc2b494d7fdae9c9e1ef3
-#   b89e4823ef9528936072f5f195d7fdab9e1f838b
-# that do not apply cleanly against our older version.
-Patchscript: <<
-# This corrects bug #280 of the bug tracker and can be deleted, once fixed by upstream
-  sed -i.bak 's|LIBIMOBILEDEVICE_INTERNAL inline void debug_buffer(|inline void debug_buffer(|g' src/debug.h
+Depends: %N1.0.6-shlibs (>= %v-%r)
+BuildDepends: <<
+  libplist2.0.3,
+  fink-package-precedence,
+  openssl110-dev,
+  pkgconfig,
+  usbmuxd2.0.6-dev
 <<
 
-ConfigureParams: LDFLAGS="-L%p/lib" CFLAGS="-I%p/include -std=gnu89" --without-cython
+# Unpack Phase:
+Source: https://github.com/libimobiledevice/libimobiledevice/releases/download/%v/libimobiledevice-%v.tar.bz2
+Source-MD5: c50a3a32acf33dc8c9ec88137ad12ec4
 
-DocFiles: AUTHORS COPYING* NEWS README
+# Patch Phase:
+#   Fix -I ordering (quick hack)
+PatchFile: %n.patch
+PatchFile-MD5: d8ce272a06fc8d9db47c3b9167920b99
+PatchScript: <<
+  %{default_script}
+  # don't propagate needless BuildDepends
+  perl -ni -e 'print unless /\.private/' src/libusbmuxd-2.0.pc.in
+<<
+
+ConfigureParams: CFLAGS="-I%p/include -std=gnu89" --without-cython --disable-static --disable-silent-rules
+CompileScript: <<
+  %{default_script}
+  fink-package-precedence --prohibit-bdep=%n .
+<<
+
+DocFiles: AUTHORS COPYING* NEWS README.md
 
 SplitOff: <<
-  Package: %N4-shlibs
-  Depends: usbmuxd2-shlibs, libplist1-shlibs, openssl100-shlibs
+  Package: %N1.0.6-shlibs
+  Depends: <<
+    libplist2.0.3-shlibs,
+    openssl110-shlibs,
+    usbmuxd2.0.6-shlibs
+  <<
 
   Files: <<
-    lib/libimobiledevice.3.dylib
+    lib/libimobiledevice-1.0.6.dylib
   <<
   Shlibs: <<
-    %p/lib/libimobiledevice.3.dylib 4.0.0 %n (>= 1.1.4-2)
+    %p/lib/libimobiledevice-1.0.6.dylib 7.0.0 %n (>= 1.0.6-1)
   <<
-  DocFiles: AUTHORS COPYING* NEWS README
+  DocFiles: AUTHORS COPYING* NEWS README.md
 <<
 
 Splitoff2: <<
-  Package: %N4-dev
-  Conflicts: %N-dev
-  Replaces: %N-dev
-  Depends: %N4-shlibs (>= %v-1)
+  Package: %N1.0.6-dev
+  Conflicts: %N-dev, %N4-dev
+  Replaces: %N-dev, %N4-dev
+  Depends: %N1.0.6-shlibs (= %v-%r)
   BuildDependsOnly: true
   Files: <<
     include
     lib
   <<
-  DocFiles: AUTHORS COPYING* NEWS README docs/html
+  DocFiles: AUTHORS COPYING* NEWS README.md docs/html
 <<
 
 # Additional Info
