@@ -1,0 +1,12 @@
+diff -Nurd -x'*~' libusbmuxd-2.0.2.orig/tools/Makefile.in libusbmuxd-2.0.2/tools/Makefile.in
+--- libusbmuxd-2.0.2.orig/tools/Makefile.in	2020-06-15 14:25:48.000000000 -0400
++++ libusbmuxd-2.0.2/tools/Makefile.in	2020-12-28 11:11:35.000000000 -0500
+@@ -320,7 +320,7 @@
+ top_build_prefix = @top_build_prefix@
+ top_builddir = @top_builddir@
+ top_srcdir = @top_srcdir@
+-AM_CFLAGS = $(GLOBAL_CFLAGS) -I$(top_srcdir)/common -I$(top_srcdir)/src -I$(top_srcdir)/include
++AM_CPPFLAGS = -I$(top_srcdir)/common -I$(top_srcdir)/src -I$(top_srcdir)/include $(GLOBAL_CFLAGS)
+ AM_LDFLAGS = $(libpthread_LIBS)
+ iproxy_SOURCES = iproxy.c
+ iproxy_CFLAGS = $(AM_CFLAGS)
